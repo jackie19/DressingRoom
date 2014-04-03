@@ -1,0 +1,56 @@
+{
+    "coat"   : [
+        {
+            "moudel": "images/outwear2.png",
+            "thumb" : "images/outwear2.png",
+            "index" : "3",
+            "id"    : "004"
+        },
+        {
+            "moudel": "images/outwear.png",
+            "thumb" : "images/outwear.png",
+            "index" : "3",
+            "id"    : "006"
+        }
+    ],
+    "shirt"  : [
+        {
+            "moudel": "images/shirt2.png",
+            "thumb" : "images/shirt2.png",
+            "index" : "2",
+            "id"    : "005"
+        }
+    ],
+    "trousers": [
+        {
+            "moudel": "images/k0.png",
+            "thumb" : "images/k0.png",
+            "index" : "1",
+            "id"    : "001"
+        }
+
+    ],
+    "shoes": [
+        {
+            "moudel": "images/shoe0.png",
+            "thumb" : "images/shoe0.png",
+            "index" : "1",
+            "id"    : "002"
+        },
+        {
+            "moudel": "images/shoe2.png",
+            "thumb" : "images/shoe2.png",
+            "index" : "1",
+            "id"    : "0035"
+        }
+    ],
+    "sweater": [
+        {
+            "moudel": "images/t0.png",
+            "thumb" : "images/t0.png",
+            "index" : "1",
+            "id"    : "003"
+        }
+    ],
+    "配饰":null
+}

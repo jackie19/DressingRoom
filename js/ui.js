@@ -65,12 +65,18 @@
             },
             bind      : function () {
                 var self = this;
-                this.types.bind('click', function (event) {
+                this.types.bind('touchstart', function (event) {
+                    event.stopPropagation();
+                    event.preventDefault();
+                });
+//                显示衣服列表
+                this.types.bind('click touchend tap', function (event) {
                     self.loadstart('mask');
                     self.type = $(this).attr('type');
 //              todo  按类型取数据, 分页
 
                     var src = 'js/test.json?p=' + self.type;
+//                    var src = 'js/'+ self.type +'.json?p=' + 0
 
                     $.getJSON(
                         src,
@@ -83,7 +89,14 @@
                         });
                 });
 
-                this.clothesList.delegate('img', 'click', function () {
+                this.clothesList.delegate('img', 'touchstart', function (event) {
+                    event.stopPropagation();
+                    event.preventDefault();
+                });
+
+
+//                点击试穿
+                this.clothesList.delegate('img', 'tap click touchend', function () {
 
                     var id = $(this).attr('id');
                     var moudel = $(this).attr('moudel');
@@ -98,8 +111,12 @@
                 });
 
 //               todo 分页等json搞好，一次性全部获取json再分页，或者按照页数取json
-                $('.btn', this.clothesListBox).bind('click', function () {
+                $('.btn', this.clothesListBox).bind('tap click touchend', function () {
 
+                    if ($(this).hasClass('close')) {
+                        self.clothesListBox.removeClass('in').addClass('out');
+                        return false;
+                    }
                     if ($(this).hasClass('prev')) {
 
                     }
@@ -113,10 +130,8 @@
             },
             putOn     : function (data) {
                 var img = sub(this.listItemTpl, data);
-                //todo  index
 
                 if ($.inArray(data.id, this.dressing) == -1) {
-
                     this.undress(data);
                     this.dressing.push(data.id);
                     this.container.append(img);
@@ -124,9 +139,10 @@
 
                 }
             },
+//            todo 供翻页使用，未集成
             getData   : function (type, page, callback) {
                 var self = this;
-                var src = 'js/test.json?p=' + type;
+                var src = 'js/' + self.type + '.json?p=' + page;
                 $.getJSON(
                     src,
                     function (data) {
@@ -134,15 +150,15 @@
                             self.loadend('mask');
                             self.renderList(data);
 
-                            if($.isFunction(callback)){
+                            if ($.isFunction(callback)) {
                                 callback(data);
                             }
                             return data;
                         }, 300);
-
                     });
 
             },
+            //todo 找到已经穿的
             renderList: function (data) {
                 var self = this;
                 var innerHTML = '';
@@ -152,6 +168,16 @@
                         innerHTML += sub(self.listItemTpl, item);
                     });
                     self.clothesList.html(innerHTML);
+                    self.dressing.forEach(function (id) {
+
+                        $.each($('img', self.clothesList), function (idx, img) {
+                            if (this.id == id) {
+                                $(this).addClass('selected');
+                            }
+                        });
+
+
+                    });
                     self.clothesListBox.removeClass('out').addClass('in');
                 }
             },
@@ -163,8 +189,9 @@
             },
             undress   : function (data) {
                 var self = this;
-//                todo 单件脱下
+//                todo 点击按钮脱单件
                 $('li', this.container).each(function (i, li) {
+//                    去除同类型，同id的
                     if ($(li).css('z-index') == data.index && $(li).attr('type') == data.type) {
                         var id = $('img', li).attr('id');
                         var indexOf = self.dressing.indexOf(id);

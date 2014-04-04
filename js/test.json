@@ -2,13 +2,13 @@
     "coat"   : [
         {
             "moudel": "images/outwear2.png",
-            "thumb" : "images/outwear2.png",
+            "thumb" : "images/outwear2_thumb.png",
             "index" : "3",
             "id"    : "004"
         },
         {
             "moudel": "images/outwear.png",
-            "thumb" : "images/outwear.png",
+            "thumb" : "images/outwear_thumb.png",
             "index" : "3",
             "id"    : "006"
         }

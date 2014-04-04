@@ -16,17 +16,17 @@ ul,li{list-style:none;}
 
 .wrap{height:inherit;}
 
-.preview{ position:relative;z-index: 1;width: 100%;height:inherit;}
-.model{position:absolute;top: 0;width: 100%;left: 0;z-index: -1;}
-.model img{width: 100%;}
+.preview{ position:absolute;z-index: 1;width: 100%;bottom: 32px;left: 0;top: 0;}
+.model{position:absolute;top: 0;width: 100%;left: 0;z-index: -1;bottom: 0;height: 100%; text-align:center;}
+.model img{visibility:hidden;}
 
-.clothes{position:absolute;width: 100%;z-index: 999;top: 0;left: 0;}
-.clothes li{ position:absolute;width: 100%;}
-.clothes img{width: 100%;}
+.clothes{position:absolute;width: 100%;z-index: 999;top: 0;left: 0;bottom: 0;height: 100%; text-align:center;}
+.clothes li{ position:absolute;width: 100%;height: 100%;left: 0;top: 0;}
+/*.clothes img{height: 100%;}*/
 
 
 .bottom{ position:absolute;width: 100%;bottom: 0;z-index: 999;}
-.types li{ display:inline-block; vertical-align:top;padding: 5px; background-color:#ccc;cursor:pointer;}
+.types li{ display:inline-block; vertical-align:top;padding: 8px 9px; background-color:#ccc;cursor:pointer;}
 
 
 .clothes-list-box{ position:fixed;z-index: 999;width: 100%;bottom: 0;left: 0;top: 0; background-color:rgba(255, 255, 255, 0.95);}

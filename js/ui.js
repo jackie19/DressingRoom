@@ -160,11 +160,22 @@
                 this.dressing = []; //正在穿的 id
                 this.type = null; //服装类型：外套，衬衫...
 
+                this.tip = $('<div class="tip"></div>"');
+
                 this.sizeType = null; //屏幕与图片尺寸比例
 
                 this.bind();
 
                 this.setSize();
+            },
+            tipShow   : function (txt, speed) {
+                this.tip.text(txt);
+                this.tip.appendTo('body');
+
+                setTimeout(this.tipRemove.bind(this), speed);
+            },
+            tipRemove : function () {
+                this.tip.remove();
             },
             setSize   : function (elem) {
                 var screen_p,
@@ -275,8 +286,10 @@
             },
 //            todo 供翻页使用，未集成
             getData   : function (type, page, callback) {
+
                 var self = this;
                 var src = 'js/' + self.type + '.json?p=' + page;
+                self.loadstart('mask');
                 $.getJSON(
                     src,
                     function (data) {
@@ -330,7 +343,7 @@
                     if (
                         (li_zindex == data.index && li_type == data.type)
                             ||
-                            (typeof data.index == 'undefined')
+                            (typeof data.index == 'undefined' && li_type == data.type)
                         ) {
                         var id = $('img', li).attr('id');
                         var indexOf = self.dressing.indexOf(id);
@@ -364,6 +377,17 @@ $(function () {
         var events = $(this).attr('event');
 
         console.log(myRoom[events]());
+
+        if (events == 'getDress') {
+            //        todo 收藏 success callback
+            if (myRoom[events]().length > 0) {
+                myRoom.tipShow('收藏成功！', 600);
+
+            } else {
+                myRoom.tipShow('未试穿任何衣服！', 600);
+
+            }
+        }
         return false;
     });
 

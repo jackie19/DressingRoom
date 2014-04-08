@@ -67,7 +67,6 @@
                 for (; i < list.length; i++) {
                     list[i].end ? list.splice(i--, 1) : list[i]();
                 }
-                ;
                 !list.length && stop();
             },
 
@@ -89,7 +88,6 @@
                 load && load.call(img);
                 return;
             }
-            ;
 
             width = img.width;
             height = img.height;
@@ -112,8 +110,7 @@
                     ready.call(img);
                     onready.end = true;
                 }
-                ;
-            };
+                            };
             onready();
 
             // 完全加载完毕的事件
@@ -134,7 +131,6 @@
                 // 无论何时只允许出现一个定时器，减少浏览器性能损耗
                 if (intervalId === null) intervalId = setInterval(tick, 40);
             }
-            ;
         };
     })();
 
@@ -212,7 +208,7 @@
                     event.preventDefault();
                 });
 //                显示衣服列表
-                this.types.bind('click touchend tap', function (event) {
+                this.types.bind('click touchend tap', function () {
                     self.loadstart('mask');
                     self.type = $(this).attr('type');
 //              todo  按类型取数据, 分页
@@ -359,7 +355,7 @@
             clear     : function () {
                 this.dressing = [];
                 this.container.html('');
-                return 'true';
+                return 'clear';
             }
 
         });
@@ -367,7 +363,7 @@
     })(__super);
 
     window.iRoom = iRoom;
-})(window)
+})(window);
 
 $(function () {
 
@@ -388,8 +384,10 @@ $(function () {
 
             }
         }
+
+        if( events == 'clear' && myRoom[events]() == 'clear'){
+            myRoom.tipShow('清除成功！', 600);
+        }
         return false;
     });
-
-
 });

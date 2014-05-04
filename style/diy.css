@@ -14,9 +14,9 @@ a,a:active,a:hover{ text-decoration:none; }
 :focus{ outline:none }
 ul,li{list-style:none;}
 
-.wrap{height:inherit;}
+.wrap{height:inherit; overflow:hidden;width: 100%; position:relative;}
 
-.preview{ position:absolute;z-index: 1;width: 100%;bottom: 32px;left: 0;top: 0;}
+.preview{ position:absolute;z-index: 1;width: 100%;bottom: 32px;left: 45px;top: 0;}
 .model{position:absolute;top: 0;width: 100%;left: 0;z-index: -1;bottom: 0;height: 100%; text-align:center;}
 .model img{visibility:hidden;}
 
@@ -25,11 +25,15 @@ ul,li{list-style:none;}
 /*.clothes img{height: 100%;}*/
 
 
-.bottom{ position:absolute;width: 100%;bottom: 0;z-index: 999;}
-.types li{ display:inline-block; vertical-align:top;padding: 8px 9px; background-color:#ccc;cursor:pointer;}
+.bottom{ position:absolute;width: 100%;bottom: 0;z-index: 999; text-align:center; background-color:#202a2c;}
+.types{ overflow:hidden; font-size:0; margin-left:9px;}
+.types >li{ display:inline-block; vertical-align:top;padding: 8px 0; color:#fff;;cursor:pointer; font-size:14px; width:25%; position:relative;}
+.addFav{ float:right; padding:8px; color:#fff; margin-right:9px;}
 
+.dropmenu{ position:absolute;top: 0;left: 0; text-align:center;z-index: 999;}
+.dropmenu li{ color:#000; font-size:14px; padding:6px 0; margin-bottom:2px; background-color:rgba(0,0,0,.3);}
 
-.clothes-list-box{ position:fixed;z-index: 999;width: 100%;bottom: 0;left: 0;top: 0; background-color:rgba(255, 255, 255, 0.95);}
+.clothes-list-box{ position:absolute;z-index: 999;width: 70px;left: 10px;top: 50%;-webkit-transform:translateY(-50%);}
 .clothes-list{padding: 5px;}
 .clothes-list li{ display:inline-block; vertical-align:top;}
 .clothes-list img{width: 60px;}

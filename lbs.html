@@ -14,18 +14,24 @@
 <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
 <script type="text/javascript">
     (function () {
-        var y = 23.142789;
-        var x = 113.301823;
+
+        var myLat,
+                myLng;
+        var lat = 23.142789;
+        var lng = 113.301823;
+
+       // var lat = 23.12004910; //根据ip取 http://api.map.baidu.com/location/ip?ak=FE8666dd669bda487a5acdc685225074&coor=bd09ll
+       // var lng = 113.30764968;
         var map = new BMap.Map("container");
-        map.centerAndZoom(new BMap.Point(x, y), 19);
+        map.centerAndZoom(new BMap.Point(lng, lat), 12);
         map.enableScrollWheelZoom();
-        var marker = new BMap.Marker(new BMap.Point(x, y));
+        var marker = new BMap.Marker(new BMap.Point(lng, lat));
         map.addOverlay(marker);
         var licontent = "<b>汇华商贸</b><br>";
         licontent += "<span><strong>地址：</strong>先烈中路80号</span><br>";
         licontent += "<span><strong>电话：</strong>(010)63095718,(010)63095630</span><br>";
-        licontent += "<span class=\"input\"><strong></strong><input class=\"outset\" type=\"text\" name=\"origin\" value=\"北京站\"/><input class=\"outset-but\" type=\"button\" value=\"公交\" onclick=\"gotobaidu(1)\" /><input class=\"outset-but\" type=\"button\" value=\"驾车\"  onclick=\"gotobaidu(2)\"/><a class=\"gotob\" href=\"url=\"http://api.map.baidu.com/direction?destination=latlng:" + marker.getPosition().lat + "," + marker.getPosition().lng + "|name:天安门" + "®ion=北京" + "&output=html\" target=\"_blank\"></a></span>";
-        var hiddeninput = "<input type=\"hidden\" value=\"" + '北京路' + "\" name=\"region\" /><input type=\"hidden\" value=\"html\" name=\"output\" /><input type=\"hidden\" value=\"driving\" name=\"mode\" /><input type=\"hidden\" value=\"latlng:" + marker.getPosition().lat + "," + marker.getPosition().lng + "|name:天安门" + "\" name=\"destination\" />";
+        licontent += "<span class=\"input\"><strong></strong><input class=\"outset\" type=\"text\" name=\"origin\" value=\"华师\"/><input class=\"outset-but\" type=\"button\" value=\"公交\" onclick=\"gotobaidu(1)\" /><input class=\"outset-but\" type=\"button\" value=\"驾车\"  onclick=\"gotobaidu(2)\"/><a class=\"gotob\" href=\"url=\"http://api.map.baidu.com/direction?destination=latlng:" + marker.getPosition().lat + "," + marker.getPosition().lng + "|name:汇华商贸" + "®ion=广州" + "&output=html\" target=\"_blank\"></a></span>";
+        var hiddeninput = "<input type=\"hidden\" value=\"" + '华师' + "\" name=\"region\" /><input type=\"hidden\" value=\"html\" name=\"output\" /><input type=\"hidden\" value=\"driving\" name=\"mode\" /><input type=\"hidden\" value=\"latlng:" + marker.getPosition().lat + "," + marker.getPosition().lng + "|name:汇华商贸" + "\" name=\"destination\" />";
         var content1 = "<form id=\"gotobaiduform\" action=\"http://api.map.baidu.com/direction\" target=\"_blank\" method=\"get\">" + licontent + hiddeninput + "</form>";
         var opts1 = { width: 300 };
 
@@ -34,6 +40,43 @@
         marker.addEventListener('click', function () {
             marker.openInfoWindow(infoWindow);
         });
+
+
+//关于状态码
+//BMAP_STATUS_SUCCESS	检索成功。对应数值“0”。
+//BMAP_STATUS_CITY_LIST	城市列表。对应数值“1”。
+//BMAP_STATUS_UNKNOWN_LOCATION	位置结果未知。对应数值“2”。
+//BMAP_STATUS_UNKNOWN_ROUTE	导航结果未知。对应数值“3”。
+//BMAP_STATUS_INVALID_KEY	非法密钥。对应数值“4”。
+//BMAP_STATUS_INVALID_REQUEST	非法请求。对应数值“5”。
+//BMAP_STATUS_PERMISSION_DENIED	没有权限。对应数值“6”。(自 1.1 新增)
+//BMAP_STATUS_SERVICE_UNAVAILABLE	服务不可用。对应数值“7”。(自 1.1 新增)
+//BMAP_STATUS_TIMEOUT	超时。对应数值“8”。(自 1.1 新增)
+
+        //html5
+        var geolocation = new BMap.Geolocation();
+        geolocation.getCurrentPosition(function(r){
+            if(this.getStatus() == BMAP_STATUS_SUCCESS){
+//                var mk = new BMap.Marker(r.point);
+//                map.addOverlay(mk);
+//                map.panTo(r.point);
+                alert('您的位置：'+r.point.lng+','+r.point.lat);
+            }
+            else {
+                //alert('failed'+this.getStatus());
+
+//                get city
+                function myFun(result){
+                    var cityName = result.name;
+                    map.setCenter(cityName);
+                    alert(cityName);
+
+                }
+                var myCity = new BMap.LocalCity();
+                myCity.get(myFun);
+
+            }
+        },{enableHighAccuracy: true});
 
     })();
     function gotobaidu(type) {
@@ -49,6 +92,48 @@
                 $("#gotobaiduform")[0].submit();
             }
         }
+    }
+
+    var EARTH_RADIUS = 6378137.0;    //单位M
+    var PI = Math.PI;
+
+    function getRad(d) {
+        return d * PI / 180.0;
+    }
+    /**
+     * approx distance between two points on earth ellipsoid
+     * @param {Object} lat1
+     * @param {Object} lng1
+     * @param {Object} lat2
+     * @param {Object} lng2
+     */
+    function getFlatternDistance(lat1, lng1, lat2, lng2) {
+        var f = getRad((lat1 + lat2) / 2);
+        var g = getRad((lat1 - lat2) / 2);
+        var l = getRad((lng1 - lng2) / 2);
+
+        var sg = Math.sin(g);
+        var sl = Math.sin(l);
+        var sf = Math.sin(f);
+
+        var s, c, w, r, d, h1, h2;
+        var a = EARTH_RADIUS;
+        var fl = 1 / 298.257;
+
+        sg = sg * sg;
+        sl = sl * sl;
+        sf = sf * sf;
+
+        s = sg * (1 - sl) + (1 - sf) * sl;
+        c = (1 - sg) * (1 - sl) + sf * sl;
+
+        w = Math.atan(Math.sqrt(s / c));
+        r = Math.sqrt(s * c) / w;
+        d = 2 * w * a;
+        h1 = (3 * r - 1) / 2 / c;
+        h2 = (3 * r + 1) / 2 / s;
+
+        return d * (1 + fl * (h1 * sf * (1 - sg) - h2 * (1 - sf) * sg));
     }
 </script>
 </body>

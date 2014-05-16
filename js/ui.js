@@ -187,7 +187,7 @@
         position: 'above', //String : next | below | below_end , Object: {top:1,left:1}
         menu: '<ul class="dropmenu"></ul>',
         className: 'dropmenu',
-        hideEvents: 'click',//当菜单项 `click` 时隐藏
+        hideEvents: 'touchend',//当菜单项 `touchend` 时隐藏
         appendTo: 'body'
     };
 
@@ -302,14 +302,40 @@
                 this.types = $('li', '.types');
                 this.clothesListBox = $('.clothes-list-box');
                 this.clothesList = $('.clothes-list');
+                this.addFavBtn = $('.addFav');
+                this.active = '.prev, .next, .dropmenu li'; //添加按下class
+                this.coatType = [
+                    {
+                        type: 'coat1',
+                        text: '便西'
+                    },
+                    {
+                        type: 'coat2',
+                        text: '单西'
+                    },
+                    {
+                        type: 'coat3',
+                        text: '夹克'
+                    },
+                    {
+                        type: 'coat4',
+                        text: '风衣'
+                    }
+                ]; //外套类型;
+
+                this.data = {}; //存储处理后的数据, {coat: [{id:1,price}...], shoes:[]...}
                 this.dressing = []; //正在穿的 id
+                this.fav = [];//收藏的衣服, 一个类型有一个.
                 this.type = null; //服装类型：外套，衬衫...
 
                 this.imgSize = '354_600'; //大图尺寸
                 this.tip = $('<div class="tip"></div>"');
 
+
                 this.sizeType = null; //屏幕与图片尺寸比例
                 this.pageCount = 0; // 翻页
+
+                this.url = 'js/test.json'; //json url
                 this.bind();
 
                 this.setSize();
@@ -353,60 +379,74 @@
             },
             bind: function () {
                 var self = this;
-                this.types.bind('touchstart', function (event) {
-                    event.stopPropagation();
-                    event.preventDefault();
-                });
-//                显示dropmenu
+                //                显示dropmenu
                 var menu = new $.gui.dropmenu({
                     tpl: ' <li type="{type}">{text}</li>'
                 });
-                this.types.bind('click touchend tap', function (event) {
+
+                $(document).delegate(self.active,'touchstart', function (event) {
+                    $(this).addClass('active');
+                    event.stopPropagation();
+                    event.preventDefault();
+                });
+                $(document).delegate(self.active,'touchend', function (event) {
+                    $(this).removeClass('active');
+                });
+
+                //
+                this.types.bind('touchstart', function (event) {
+                    $('li, a').removeClass('active');
+                    $(this).addClass('active');
+                    event.stopPropagation();
+                    event.preventDefault();
+                });
+                this.addFavBtn.bind('touchstart', function (event) {
+                    $('li, a').removeClass('active');
+                    $(this).addClass('active');
+                    event.stopPropagation();
+                    event.preventDefault();
+                });
+
+                this.types.bind('touchend ', function (event) {
                     self.type = $(this).attr('type');
-                    var width = $(this).width();
-                    var menudata = [
-                        {
-                            type: 'type1',
-                            text: '便西'
-                        },
-                        {
-                            type: 'type1',
-                            text: '便西'
-                        },
-                        {
-                            type: 'type1',
-                            text: '便西'
-                        }
-                    ];
-                    menu.show({
-                        event: event,
-                        data: menudata,
-                        callback: function(){
-                            menu.menu.width(width);
-                        }
-                    });
+                    if (self.type =='coat' ){
+                        var width = $(this).width();
+                        var menudata = self.coatType;
+                        menu.show({
+                            event: event,
+                            data: menudata,
+                            callback: function(){
+                                menu.menu.width(width);
+                            }
+                        });
+                    } else {
+                        $('li, a').removeClass('active');
+                        self.getData(self.type, 0, function (data) {
+                            self.loadend('mask');
+                            data = self.formatData(data);
+                            self.renderList(data);
+                            menu.hide();
+                        });
+                    }
+
                 });
 //                显示衣服列表
                 $(document).delegate('.dropmenu li', 'touchend', function (event) {
-                    self.loadstart('mask');
+                    $('li, a').removeClass('active');
+                    if(self.type == 'addFav'){
+                        //添加收藏
+                        self.addFav($(this).attr('type')); //coat, shoes,...
 
-//                    self.type = $(this).attr('type');
-//              todo  按类型取数据, 分页
-
-                    var src = 'js/test.json?p=' + self.type;
-//                    var src = 'js/'+ self.type +'.json?p=' + 0
-
-                    $.getJSON(
-                        src,
-                        function (data) {
-                            setTimeout(function () {
-                                self.loadend('mask');
-                                data = self.formatData(data);
-                                self.renderList(data);
-                            }, 300);
-
+                    } else {
+                        self.type = $(this).attr('type');
+                        self.getData(self.type, 0, function (data) {
+                            self.loadend('mask');
+                            data = self.formatData(data);
+                            self.renderList(data);
+                            menu.hide();
                         });
-                    menu.hide();
+                    }
+
                 });
 
                 this.clothesList.delegate('img', 'touchstart', function (event) {
@@ -430,7 +470,7 @@
                     menu.hide();
                 });
 
-//               todo 分页等json搞好，一次性全部获取json再分页，或者按照页数取json
+//               上一页,下一页, todo 分页等json搞好，一次性全部获取json再分页，或者按照页数取json
                 $('.btn', this.clothesListBox).bind('tap click touchend', function () {
 
                     if ($(this).hasClass('prev')) {
@@ -446,16 +486,46 @@
                         data = self.formatData(data);
                         self.renderList(data);
                     });
-
-//                    var data = this.getData(self.type, page);
-//                    this.renderList(data)
+                });
+                //收藏
+                self.addFavBtn.bind('touchend' , function (event) {
+                    self.type = $(this).attr('type');
+                    var width = $(this).outerWidth();
+                    var menudata = [
+                        {
+                            type: 'coat',
+                            text: '收藏上装'
+                        },
+                        {
+                            type: 'trousers',
+                            text: '收藏下装'
+                        },
+                        {
+                            type: 'shirt',
+                            text: '收藏内衬'
+                        },
+                        {
+                            type: 'shoes',
+                            text: '收藏鞋子'
+                        },
+                        {
+                            type: 'go_fav',
+                            text: '我的收藏'
+                        }
+                    ];
+                    menu.show({
+                        event: event,
+                        data: menudata,
+                        callback: function(){
+                            menu.menu.width(width);
+                        }
+                    });
                 });
             },
             putOn: function (data) {
                 var img = $(sub(this.listItemTpl, data)).hide();
 
                 this.setSize($('img', img));
-
                 if ($.inArray(data.id, this.dressing) === -1) {
                     this.undress(data);
                     this.dressing.push(data.id);
@@ -464,24 +534,36 @@
                     this.undress(data);
                 }
             },
-//            todo 供翻页使用，未集成
+            //添加收藏
+            //param {string} 'coat, shoes, trousers, shirt'
+            addFav: function (type) {
+
+                var clothes = this.data[type]; //[{id:1, price}...]
+
+                this.dressing.forEach(function (id) {
+                    clothes.forEach(function (cloth) {
+                        if(cloth.id == id){
+                            this.fav.push(cloth);
+                        }
+                    });
+                });
+
+            },
+//            //取衣服列表
             getData: function (type, page, callback) {
 
                 var self = this;
-                var src = 'js/' + self.type + '.json?p=' + page;
+                var url = self.url + '?type='+type+'&p='+page;
                 self.loadstart('mask');
-                return $.getJSON(
-                    src,
-                    function (data) {
-//                            self.loadend('mask');
-//                            self.renderList(data);
 
+                return $.getJSON(
+                    url,
+                    function (data) {
                         if ($.isFunction(callback)) {
                             callback(data);
                         }
                         return data;
                     });
-
             },
             formatData: function (data) {
                 var self = this;
@@ -497,16 +579,17 @@
                         var imgname = thumb.slice(thumb.lastIndexOf('/') + 1).replace(search, '').replace('?', ''); //004.png
 
                         var moudelimgname = path + imgname.replace('.png', '') + '_' + self.imgSize + '.png';
-                        var arr_search = search.split('&');
+                        var arr_search = search.split('&');//['index=3', 'aa=bb']
                         var obj_search = {};
                         arr_search.forEach(function (item) {
-                            var arr_sp = item.split('=');
+                            var arr_sp = item.split('=');// ['index','3']
                             obj_search[arr_sp[0]] = arr_sp[1];
                             arritem[arr_sp[0]] = arr_sp[1];
                         });
 
                         arritem.id = imgname.replace('.png', '');
                         arritem.moudel = moudelimgname;
+
 
                     });
 
@@ -517,7 +600,9 @@
             renderList: function (data) {
                 var self = this;
                 var innerHTML = '';
+
                 if (data[self.type] && data[self.type].length > 0) {
+                    $('.btn', this.clothesListBox).show();
                     $.each(data[self.type], function (i, item) {
                         item.type = self.type;
                         innerHTML += sub(self.listItemTpl, item);
@@ -531,14 +616,17 @@
                             }
                         });
                     });
-                    self.clothesListBox.removeClass('out').addClass('in');
+//                    self.clothesListBox.removeClass('out').addClass('in');
                 }
             },
             loadstart: function (key) {
                 this[key].show();
+
+                this.timeout_load = setTimeout(this.loadend.bind(this, key), 10000);
             },
             loadend: function (key) {
-                this[key].fadeOut('fast');
+                this[key || 'mask'].fadeOut('fast');
+                clearTimeout(this.timeout_load);
             },
             undress: function (data) {
                 var self = this,
@@ -562,7 +650,6 @@
                 })
             },
             getDress: function () {
-
                 return this.dressing;
             },
             clear: function () {
@@ -577,10 +664,9 @@
 
     window.iRoom = iRoom;
 })(window);
-
 $(function () {
 
-    var myRoom = iRoom();
+    window.myRoom = iRoom();
 
     $('.btn-bind').bind('click touchend', function () {
         var events = $(this).attr('event');
@@ -597,7 +683,6 @@ $(function () {
 
             }
         }
-
         if (events === 'clear' && myRoom[events]() === 'clear') {
             myRoom.tipShow('清除成功！', 600);
         }

@@ -10,20 +10,24 @@
 <div class="wrap">
 
     <div class="wrap_room">
+        <div class="start" style="display: none;">
+            <div class="bg"></div>
+            <div class="logo"></div>
+            <div class="fit"></div>
+        </div>
         <div class="preview">
 
             <div class="model">
-                <img src="style/images/body1.png" alt="" />
+                <img src="style/images/body.png" alt="" />
             </div>
-
+            <!--试穿列表-->
             <ul class="clothes"></ul>
-
 
         </div>
         <div class="mask">
-            <div class="progress-bar blue stripes">
-                <span style="width: 100%"></span>
-            </div>
+            <!--<div class="progress-bar blue stripes">-->
+                <!--<span style="width: 100%"></span>-->
+            <!--</div>-->
         </div>
         <div class="bottom">
             <!--<a class="btn-bind" event="clear" href="#">清空</a>-->
@@ -41,26 +45,47 @@
 
             <!--<a class="close btn" href="#">关闭</a>-->
             <a class="prev btn" href="#" style="display: none;">上一页</a>
+            <div class="undress btn" href="#" style="display: none;">
+                <span>脱掉</span><span class="type">外套</span>
+            </div>
             <!--缩略图列表-->
             <ul class="clothes-list"></ul>
             <a class="next btn" href="#" style="display: none;">下一页</a>
         </div>
     </div>
-    <div class="wrap_fav" style="display: none;">
+    <div class="wrap_fav" style="visibility:hidden">
         <div class="top">
             <span class="fl">已收藏产品</span>
             <span class="fr">
                 <span class="grey">欢迎您</span>
-                <span class="name">andeie</span>
+                <span class="name"></span>
             </span>
         </div>
 
-        <ul class="fav_list">
+        <div class="wrap_fav_scroll">
+            <ul class="fav_list">
 
-        </ul>
+            </ul>
+            <div class="tc">
+                <div class="fav-btn" style="padding: 8px 20px;">
+                    去最近的门店购买
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom">
+            <a class="return" href="#">　返回　</a>
+        </div>
     </div>
 </div>
 <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
 <script type="text/javascript" src="js/ui.js"></script>
+<script type="text/javascript">
+
+    window.myRoom = iRoom();
+
+    ////////////fixme
+    myRoom.username = '用户名';
+</script>
 </body>
 </html>

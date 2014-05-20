@@ -1,0 +1,22 @@
+{
+    "coat1"   : [
+        {
+            "thumb" : "images/0041.png?index=7&price=1000&suit=舞会,宴会&size=S,M,L,XL"
+        }
+    ],
+    "shirt"  : [
+        {
+            "thumb" : "images/s005.png?index=5&price=888&suit=舞会,宴会&size=S,M,L,XL"
+        }
+    ],
+    "trousers": [
+        {
+            "thumb" : "images/t001.png?index=3&price=777&suit=舞会,宴会&size=S,M,L,XL"
+        }
+    ],
+    "shoes": [
+        {
+            "thumb" : "images/shoes002.png?index=1&price=666&suit=舞会,宴会&size=S,M,L,XL"
+        }
+    ]
+}

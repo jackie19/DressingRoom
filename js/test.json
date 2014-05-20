@@ -1,38 +1,34 @@
 {
     "coat1"   : [
         {
-            "thumb" : "images/0041.png?index=3&price=1000&suit=舞会,宴会&size=S,M,L,XL"
+            "thumb" : "images/0041.png?index=7&price=1000&suit=舞会,宴会&size=S,M,L,XL"
         },
         {
-            "thumb" : "images/0042.png?index=3&price=800&suit=舞会,宴会&size=S,M,L,XL"
+            "thumb" : "images/0042.png?index=7&price=800&suit=舞会,宴会&size=S,M,L,XL"
         },
         {
-            "thumb" : "images/0043.png?index=3&price=500&suit=舞会,宴会&size=S,M,L,XL"
-        },
-        {
-            "thumb" : "images/0044.png?index=3&price=600&suit=舞会,宴会&size=S,M,L,XL"
-        },
-        {
-            "thumb" : "images/0045.png?index=3&price=700&suit=舞会,宴会&size=S,M,L,XL"
+            "thumb" : "images/0043.png?index=7&price=500&suit=舞会,宴会&size=S,M,L,XL"
         }
     ],
     "shirt"  : [
         {
-            "thumb" : "images/005.png?index=2&price=700&suit=舞会,宴会&size=S,M,L,XL"
+            "thumb" : "images/s005.png?index=5&price=888&suit=舞会,宴会&size=S,M,L,XL"
+        },
+        {
+            "thumb" : "images/s006.png?index=5&price=999&suit=舞会,宴会&size=S,M,L,XL"
         }
     ],
     "trousers": [
         {
-            "thumb" : "images/001.png?index=1"
+            "thumb" : "images/t001.png?index=3&price=666&suit=舞会,宴会&size=S,M,L,XL"
+        },
+        {
+            "thumb" : "images/t002.png?index=3&price=555&suit=舞会,宴会&size=S,M,L,XL"
         }
-
     ],
     "shoes": [
         {
-            "thumb" : "images/002.png?index=1"
-        },
-        {
-            "thumb" : "images/0035.png?index=1"
+            "thumb" : "images/shoes002.png?index=1&price=444&suit=舞会,宴会&size=S,M,L,XL"
         }
     ]
 }

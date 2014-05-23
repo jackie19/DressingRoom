@@ -900,7 +900,7 @@
                         if ((li_zindex === data.index && li_type === data.type && id != data.id)
                             //|| (typeof data.index === 'undefined' && li_type === data.type)
                             ) {
-                            var id = $('img', li).attr('id');
+//                            var id = $('img', li).attr('id');
                             var indexOf = self.dressing.indexOf(id);
                             self.dressing.splice(indexOf, 1);
                             $(li).remove();

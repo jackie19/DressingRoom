@@ -1,0 +1,32 @@
+{
+    "state": true,
+    "message": "",
+    "list": [
+        {
+            "id": "t001",
+            "situation": "\u821e\u4f1a,\u5bb4\u4f1a2",
+            "price": "121.00",
+            "index": "30",
+            "c_id": "2",
+            "recommend": "0",
+            "size": "S,M,L"
+        },
+        {
+            "id": "0042",
+            "situation": "\u821e\u4f1a,\u5bb4\u4f1a",
+            "price": "1200.00",
+            "index": "50",
+            "c_id": "5",
+            "recommend": "0",
+            "size": "S,M,L"
+        },
+        {
+            "id": "t001",
+            "situation": "\u821e\u4f1a,\u5bb4\u4f1a2",
+            "price": "121.00",
+            "index": "30",
+            "c_id": "2",
+            "recommend": "0",
+            "size": "S,M,L"
+        }
+    ]}

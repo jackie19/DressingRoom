@@ -1,34 +1,78 @@
 {
-    "coat1"   : [
+    "state": true,
+    "message": "",
+
+    "5"   : [
         {
-            "thumb" : "images/0041.png?index=7&price=1000&suit=舞会,宴会&size=S,M,L,XL"
+            "id": "0041",
+            "situation": "\u821e\u4f1a,\u5bb4\u4f1a2",
+            "price": "800",
+            "index": "50",
+            "c_id": "5",
+            "size":"S,M,L,XL"
+
         },
         {
-            "thumb" : "images/0042.png?index=7&price=800&suit=舞会,宴会&size=S,M,L,XL"
+            "id": "0042",
+            "situation": "\u821e\u4f1a,\u5bb4\u4f1a2",
+            "price": "800.00",
+            "index": "50",
+            "c_id": "5",
+            "size":"S,M,L,XL"
         },
         {
-            "thumb" : "images/0043.png?index=7&price=500&suit=舞会,宴会&size=S,M,L,XL"
+            "id": "0043",
+            "situation": "\u821e\u4f1a,\u5bb4\u4f1a2",
+            "price": "800.00",
+            "index": "50",
+            "c_id": "5",
+            "size":"S,M,xxL"
         }
     ],
-    "shirt"  : [
+    "3"  : [
         {
-            "thumb" : "images/s005.png?index=5&price=888&suit=舞会,宴会&size=S,M,L,XL"
+            "id": "s005",
+            "situation": "\u821e\u4f1a,\u5bb4\u4f1a2",
+            "price": "800.00",
+            "index": "40",
+            "c_id": "5",
+            "size":"S,M,xxL"
         },
         {
-            "thumb" : "images/s006.png?index=5&price=999&suit=舞会,宴会&size=S,M,L,XL"
+            "id": "s006",
+            "situation": "\u821e\u4f1a,\u5bb4\u4f1a2",
+            "price": "800.00",
+            "index": "40",
+            "c_id": "5",
+            "size":"S,M"
         }
     ],
-    "trousers": [
+    "2": [
         {
-            "thumb" : "images/t001.png?index=3&price=666&suit=舞会,宴会&size=S,M,L,XL"
+            "id": "t001",
+            "situation": "\u821e\u4f1a,\u5bb4\u4f1a2",
+            "price": "800.00",
+            "index": "30",
+            "c_id": "5",
+            "size":"S,M,xxL"
         },
         {
-            "thumb" : "images/t002.png?index=3&price=555&suit=舞会,宴会&size=S,M,L,XL"
+            "id": "t002",
+            "situation": "\u821e\u4f1a,\u5bb4\u4f1a2",
+            "price": "800.00",
+            "index": "30",
+            "c_id": "5",
+            "size":"S,M"
         }
     ],
-    "shoes": [
+    "4": [
         {
-            "thumb" : "images/shoes002.png?index=1&price=444&suit=舞会,宴会&size=S,M,L,XL"
+            "id": "shoes002",
+            "situation": "\u821e\u4f1a,\u5bb4\u4f1a2",
+            "price": "800.00",
+            "index": "20",
+            "c_id": "5",
+            "size":"S,M,xxL"
         }
     ]
 }

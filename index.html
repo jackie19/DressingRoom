@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>DIKENI(迪柯尼)    </title>
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1,user-scalable=no" />
     <link rel="stylesheet" href="style/diy.css" />
@@ -34,10 +34,15 @@
             <a class="addFav" type="addFav" event="getDress" href="#">　收藏　</a>
             <!--衣服类型-->
             <ul class="types">
-                <li type="coat">上装</li>
+         <!--       <li type="coat">上装</li>
                 <li type="trousers">下装</li>
                 <li type="shirt">衬衫</li>
-                <li type="shoes">鞋子</li>
+                <li type="shoes">鞋子</li>-->
+
+                <li type="1">上装</li>
+                <li type="2">下装</li>
+                <li type="3">衬衫</li>
+                <li type="4">鞋子</li>
             </ul>
         </div>
 
@@ -66,7 +71,7 @@
             <ul class="fav_list">
 
             </ul>
-            <div class="tc">
+            <div class="tc" style="display: none;">
                 <div class="fav-btn" style="padding: 8px 20px;">
                     去最近的门店购买
                 </div>
@@ -79,13 +84,17 @@
     </div>
 </div>
 <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
-<script type="text/javascript" src="js/ui.js"></script>
+<!--<script type="text/javascript" src="js/ui.js"></script>-->
+<script type="text/javascript">
+    document.write('<script type="text/javascript" src="js/ui.js?' + Math.random() + '"><\/script>');
+</script>
+
 <script type="text/javascript">
 
     window.myRoom = iRoom();
 
     ////////////fixme//////////
-    myRoom.username = '用户名';
+    myRoom.username = ' ';
 </script>
 </body>
 </html>

@@ -295,7 +295,7 @@
         __extends(iRoom.fn, {
             init: function () {
                 this.listItemTpl = '<li style="z-index:{index}" type="{type}"><img src="{thumb}" index="{index}" id="{id}" moudel="{moudel}" /></li>';
-                this.favlistItemTpl = ' <li> <img src="{thumb}" alt="" class="fl" /> <div class="oh"> <div class="fr"> <div class="price">{price}</div> <div class="del fav-btn" data-id="{id}">删除</div> </div> <div class="oh"> <p> <span class="grey">货号:</span> {id} </p> <p> <span class="grey">适合场合:</span> {suit} </p> <p> <span class="grey">尺码:</span> {size} </p> </div> </div> </li>';
+                this.favlistItemTpl = ' <li> <img src="{thumb}" alt="" class="fl" /> <div class="oh"> <div class="fr"> <div class="price">¥ {price}</div> <div class="del fav-btn" data-id="{id}">删除</div> </div> <div class="oh"> <p> <span class="grey">货号:</span> {id} </p> <p> <span class="grey">适合场合:</span> {suit} </p> <p> <span class="grey">尺码:</span> {size} </p> </div> </div> </li>';
 
                 this.mask = $('.mask');
                 this.loading = $('.loading');
@@ -309,32 +309,32 @@
                 this.active = '.prev, .next, .dropmenu li,.return, .del'; //添加按下class
                 this.coatType = [
                     {
-                        type: 'coat1',
+                        type: '5',
                         text: '便西'
                     },
                     {
-                        type: 'coat2',
+                        type: '6',
                         text: '单西'
                     },
                     {
-                        type: 'coat3',
+                        type: '7',
                         text: '夹克'
                     },
                     {
-                        type: 'coat4',
+                        type: '8',
                         text: '风衣'
                     }
                 ]; //外套类型;
 
                 this.undressMap = {
-                    coat: '外套',
-                    coat1: '外套',
-                    coat2: '外套',
-                    coat3: '外套',
-                    coat4: '外套',
-                    shirt: '内衬',
-                    shoes: '鞋子',
-                    trousers: '裤子'
+                    '1': '外套',
+                    '5': '外套',
+                    '6': '外套',
+                    '7': '外套',
+                    '8': '外套',
+                    '3': '内衬',
+                    '4': '鞋子',
+                    '2': '裤子'
                 }
 
                 this.data = {}; //存储处理后的数据, {coat: [{id:1,price}...], shoes:[]...}
@@ -348,9 +348,35 @@
                 this.sizeType = null; //屏幕与图片尺寸比例
                 this.pageCount = 0; // 翻页
 
-                this.url = 'js/test.json'; //json url
-//                this.url = 'js/test.json'; //json url
-                this.commendUrl = 'js/recommend.json'; //推荐试穿地址
+                this.debug = false;
+
+                if (this.debug) {
+                    this.url = 'js/test.json?'; //json url
+                    this.commendUrl = 'js/recommend.json' + '?version=' + Math.random() * 10; //推荐试穿地址
+
+                    this.weixin_user_id = '123456';
+                    this.urlCollection = {
+                        get: 'js/fav.json?weixin_user_id=' + this.weixin_user_id,
+                        add: 'js/fav.json?weixin_user_id=' + this.weixin_user_id,
+                        del: 'js/fav.json?weixin_user_id=' + this.weixin_user_id
+                    }
+                } else {
+                    this.url = 'http://dkn.zhangdewen.com/?room=get_clothes';
+                    //json url :http://dkn.zhangdewen.com/?room=get_clothes&page_index=1&c_id=5
+
+                    this.commendUrl = 'http://dkn.zhangdewen.com/?room=get_recommend'; //推荐试穿地址
+
+                    this.weixin_user_id = location.search.replace(/\?/,'').split('=')[1];
+
+                    this.urlCollection = {
+                        get: 'http://dkn.zhangdewen.com/?room=get_collection&weixin_user_id=' + this.weixin_user_id,
+                        add: 'http://dkn.zhangdewen.com/?room=add_collection&weixin_user_id=' + this.weixin_user_id,
+                        del: 'http://dkn.zhangdewen.com/?room=del_collection&weixin_user_id=' + this.weixin_user_id
+                    }
+                }
+
+                this.imgUrl = 'http://dkn.zhangdewen.com/room/images/';
+
 
                 this.startPage();
 
@@ -361,31 +387,32 @@
 
                 var anim = function (call) {
 
-                    $('.fit','.start').animate({
-                        opacity: 1,
-                        top: 200
-                    }, 800, "linear", function () {
+                    $('.fit', '.start')
+                        .animate({opacity: 1}, { queue: true, duration: 300 })
+                        .animate({
+                            top: 200
+                        }, 650, function () {
 
-                        $('.bg','.start').animate({
-                            top: '-=25'
-                            ,left:'-=20'
-                            ,width:'+=40'
-                            ,height:'+=50'
-                        }, 900, "linear", function () {
+                            $('.bg', '.start').animate({
+//                            top: '-=25'
+//                            ,left:'-=20'
+//                            ,width:'+=40'
+//                            ,height:'+=50'
+                            }, 600, "linear", function () {
 
-                            setTimeout(function () {
-                                $('.start').fadeOut('fast');
-                                call();
-                            }, 1400);
+                                setTimeout(function () {
+                                    $('.start').fadeOut('fast');
+                                    call();
+                                }, 1400);
+                            });
                         });
-                    });
 
-                    $('.logo','.start').animate({
+                    $('.logo', '.start').animate({
                         textIndent: -50
                     }, {
                         step: function (now, fx) {
                             $(this).css('-webkit-transform', 'translateX(' + now + '%)');
-                        }}, 600, "linear");
+                        }}, 500, "linear");
                 };
 
                 imgReady('style/images/fitbg.png', function () {
@@ -400,13 +427,32 @@
 
 //                        fixme
                         self.pageCount = 0;//重新计算页数
-                        self.type = 'coat1';
-                        self.getData('coat1', 0, function (data) {
+                        self.type = self.coatType[0].type; //取上装列表
+                        self.getData(self.type, 0, function (data) {
                             self.loadend('mask');
-                            data = self.formatData(data);
-                            self.renderList(data);
+                            if (data.state) {
+                                delete  data.state;
+                                delete  data.message;
+                                data = self.formatData(data);
+                                self.renderList(data);
+
+                                //获取 收藏
+                                self.getData(
+                                    0,0, function (favData) {
+
+                                        if (favData.state) {
+                                            delete  favData.state;
+                                            delete  favData.message;
+                                            self.fav = self.fav.concat(self.formatData(favData).list);
+                                        }
+                                    },
+                                    self.urlCollection.get
+                                )
+                            }
+
                         });
-                    })
+                    });
+
                 });
 
             },
@@ -464,10 +510,10 @@
 
             },
             tipShow: function (txt, speed) {
-                this.tip.text(txt);
-                this.tip.appendTo('body');
+                this.tip.text(txt).hide();
+                this.tip.appendTo('body').fadeIn('fast');
 
-                setTimeout(this.tipRemove.bind(this), speed);
+                setTimeout(this.tipRemove.bind(this), speed || 1000);
             },
             tipRemove: function () {
                 this.tip.remove();
@@ -533,7 +579,7 @@
                     self.type = $(this).attr('type');
                     self.parentType = self.type; //显示子菜单,保留父类型
 
-                    if (self.type == 'coat') {
+                    if (self.type == 1) { //coat 1
                         var width = $(this).width();
                         var menudata = self.coatType;
                         menu.show({
@@ -549,8 +595,13 @@
                         self.pageCount = 0; //重新计算页数
                         self.getData(self.type, 0, function (data) {
                             self.loadend('mask');
-                            data = self.formatData(data);
-                            self.renderList(data);
+
+                            if (data.state) {
+                                delete  data.state;
+                                delete  data.message;
+                                data = self.formatData(data);
+                                self.renderList(data);
+                            }
                             menu.hide();
                         });
                     }
@@ -564,6 +615,11 @@
                         return item.id != id;
                     })
                     $(this).closest('li').remove();
+
+                    $.getJSON(self.urlCollection.del+'&pid='+id, function (data) {
+                        console.log(data);
+                    })
+
                 });
                 //返回
                 $(document).delegate('.return', 'touchend', function (event) {
@@ -578,7 +634,7 @@
                     if ($(this).hasClass('fav')) {
                         var attr = $(this).attr('type'); //coat, shoes,...
                         if (attr == 'go_fav') { //去收藏列表
-                            console.log(self.fav);
+//                            console.log(self.fav);
 
                             var favlisthtml = '';
                             if (self.fav.length > 0) {
@@ -595,6 +651,7 @@
                         } else {
                             //添加收藏
                             self.addFav(attr);
+                            self.tipShow('收藏成功')
                         }
                         //
                         $('.name').text(self.username);
@@ -603,8 +660,13 @@
                         self.pageCount = 0;//重新计算页数
                         self.getData(self.type, 0, function (data) {
                             self.loadend('mask');
-                            data = self.formatData(data);
-                            self.renderList(data);
+
+                            if (data.state) {
+                                delete  data.state;
+                                delete  data.message;
+                                data = self.formatData(data);
+                                self.renderList(data);
+                            }
                             menu.hide();
                         });
                     }
@@ -642,7 +704,7 @@
                         var uType //= $('.type', this).data('type');
 
                         //  if (self.isInCoat(uType)) {
-                        uType = 'coat';
+                        uType = 1; //coat 1
 
                         var tempIds = [];
                         console.log('脱: ' + uType);
@@ -673,8 +735,12 @@
                         self.loadstart('mask');
                         self.getData(self.type, self.pageCount, function (data) {
                             self.loadend('mask');
-                            data = self.formatData(data);
-                            self.renderList(data);
+                            if (data.state) {
+                                delete  data.state;
+                                delete  data.message;
+                                data = self.formatData(data);
+                                self.renderList(data);
+                            }
                         });
                     }
 
@@ -684,19 +750,19 @@
                     var width = $(this).outerWidth();
                     var menudata = [
                         {
-                            type: 'coat',
+                            type: '1',
                             text: '收藏上装'
                         },
                         {
-                            type: 'trousers',
+                            type: '2',
                             text: '收藏下装'
                         },
                         {
-                            type: 'shirt',
+                            type: '3',
                             text: '收藏内衬'
                         },
                         {
-                            type: 'shoes',
+                            type: '4',
                             text: '收藏鞋子'
                         },
                         {
@@ -716,17 +782,17 @@
             },
             putOn: function (data) {
                 var img = $(sub(this.listItemTpl, data)),
-                    self = this;;
+                    self = this;
+                ;
 
                 this.setSize($('img', img));
                 if ($.inArray(data.id, this.dressing) === -1) {
 
-
-
                     self.dressing.push(data.id);
 //                    this.container.append(img.fadeIn('fast', function () { }));
                     this.container.append(img);
-                    imgReady(data.thumb, function () { }, function () {
+                    imgReady(data.thumb, function () {
+                    }, function () {
                         self.undress(data);
                     });
 
@@ -747,16 +813,21 @@
                                 return fav_item.id !== id;
                             });
                             self.fav.push(cloth);
+
+                            $.getJSON(self.urlCollection.add+'&pid='+id, function (data) {
+                                console.log(data);
+                            });
                         }
                     });
                 });
+
 
             },
 //            //取衣服列表
             getData: function (type, page, callback, url) {
 
                 var self = this;
-                var url = url || self.url + '?type=' + type + '&p=' + page;
+                var url = url || self.url + '&c_id=' + type + '&page_index=' + page + '&version=' + Math.random();
                 self.loadstart('mask');
 
                 return $.getJSON(
@@ -768,7 +839,7 @@
                         return data;
                     });
             },
-            formatData: function (data) {
+            formatData_bak: function (data) {
                 var self = this;
                 Object.keys(data).some(function (key) {
                     var arr = data[key];
@@ -798,6 +869,21 @@
                 });
                 return data;
             },
+            formatData: function (data) {
+                var self = this;
+
+                Object.keys(data).some(function (key) {
+                    var arr = data[key];
+                    if (!arr) {
+                        return;
+                    }
+                    arr.forEach(function (item) {
+                        item.moudel = self.imgUrl + item.id + '_' + self.imgSize + '.png';
+                        item.thumb = self.imgUrl + item.id + '.png';
+                    });
+                });
+                return data;
+            },
             //存储data
             //param type {string} ,coat1
             //param data {object} , {coat1:[{}]}
@@ -806,7 +892,7 @@
                 var self = this;
                 var parentType;
                 if (self.isInCoat(type)) {
-                    parentType = 'coat';
+                    parentType = '1';
                 } else {
                     parentType = type;
                 }
@@ -837,7 +923,7 @@
 //                if (self.isInCoat(uType)) {
 //                    uType = 'coat';
 //                }
-                var uType = 'coat';
+                var uType = '1'; //coat 1
                 var tempIds = [];
                 self.data[uType].forEach(function (obj) {
                     tempIds.push(obj.id);
@@ -893,12 +979,12 @@
                 $('li', this.container).each(function (i, li) {
                     li_zindex = $(li).css('z-index');
                     li_type = $(li).attr('type');
-                    id = $('img',li)[0].id;
+                    id = $('img', li)[0].id;
 
 //                    去除同类型，同层级的
                     if (typeof  data == 'object') {
                         if ((li_zindex === data.index && li_type === data.type && id != data.id)
-                            //|| (typeof data.index === 'undefined' && li_type === data.type)
+                        //|| (typeof data.index === 'undefined' && li_type === data.type)
                             ) {
 //                            var id = $('img', li).attr('id');
                             var indexOf = self.dressing.indexOf(id);

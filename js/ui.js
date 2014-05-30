@@ -295,7 +295,7 @@
         __extends(iRoom.fn, {
             init: function () {
                 this.listItemTpl = '<li style="z-index:{index}" type="{type}"><img src="{thumb}" index="{index}" id="{id}" moudel="{moudel}" /></li>';
-                this.favlistItemTpl = ' <li> <img src="{thumb}" alt="" class="fl" /> <div class="oh"> <div class="fr"> <div class="price">¥ {price}</div> <div class="del fav-btn" data-id="{id}">删除</div> </div> <div class="oh"> <p> <span class="grey">货号:</span> {id} </p> <p> <span class="grey">适合场合:</span> {suit} </p> <p> <span class="grey">尺码:</span> {size} </p> </div> </div> </li>';
+                this.favlistItemTpl = ' <li> <img src="{thumb}" alt="" class="fl" /> <div class="oh"> <div class="fr"> <div class="price">¥ {price}</div> <div class="del fav-btn" data-id="{id}">删除</div> </div> <div class="oh"> <p> <span class="grey">货号:</span> {id} </p> <p> <span class="grey">适合场合:</span> {situation} </p> <p> <span class="grey">尺码:</span> {size} </p> </div> </div> </li>';
 
                 this.mask = $('.mask');
                 this.loading = $('.loading');
@@ -346,7 +346,7 @@
                 this.tip = $('<div class="tip"></div>"');
 
                 this.sizeType = null; //屏幕与图片尺寸比例
-                this.pageCount = 0; // 翻页
+                this.pageCount = 1; // 翻页
 
                 this.debug = false;
 
@@ -359,12 +359,13 @@
                         get: 'js/fav.json?weixin_user_id=' + this.weixin_user_id,
                         add: 'js/fav.json?weixin_user_id=' + this.weixin_user_id,
                         del: 'js/fav.json?weixin_user_id=' + this.weixin_user_id
-                    }
+                    };
+                    this.imgPath = 'images/';
                 } else {
                     this.url = 'http://dkn.zhangdewen.com/?room=get_clothes';
                     //json url :http://dkn.zhangdewen.com/?room=get_clothes&page_index=1&c_id=5
 
-                    this.commendUrl = 'http://dkn.zhangdewen.com/?room=get_recommend'; //推荐试穿地址
+                    this.commendUrl = 'http://dkn.zhangdewen.com/?room=get_recommend' + '&version=' + Math.random(); //推荐试穿地址
 
                     this.weixin_user_id = location.search.replace(/\?/,'').split('=')[1];
 
@@ -372,10 +373,11 @@
                         get: 'http://dkn.zhangdewen.com/?room=get_collection&weixin_user_id=' + this.weixin_user_id,
                         add: 'http://dkn.zhangdewen.com/?room=add_collection&weixin_user_id=' + this.weixin_user_id,
                         del: 'http://dkn.zhangdewen.com/?room=del_collection&weixin_user_id=' + this.weixin_user_id
-                    }
+                    };
+                    this.imgPath = 'http://dkn.zhangdewen.com/room/images/';
                 }
 
-                this.imgUrl = 'http://dkn.zhangdewen.com/room/images/';
+
 
 
                 this.startPage();
@@ -426,9 +428,9 @@
                         self.bind();
 
 //                        fixme
-                        self.pageCount = 0;//重新计算页数
+                        self.pageCount = 1;//重新计算页数
                         self.type = self.coatType[0].type; //取上装列表
-                        self.getData(self.type, 0, function (data) {
+                        self.getData(self.type, self.pageCount, function (data) {
                             self.loadend('mask');
                             if (data.state) {
                                 delete  data.state;
@@ -592,8 +594,8 @@
                         });
                     } else {
                         $('li, a').removeClass('active');
-                        self.pageCount = 0; //重新计算页数
-                        self.getData(self.type, 0, function (data) {
+                        self.pageCount = 1; //重新计算页数
+                        self.getData(self.type, self.pageCount, function (data) {
                             self.loadend('mask');
 
                             if (data.state) {
@@ -657,8 +659,8 @@
                         $('.name').text(self.username);
                     } else {
                         self.type = $(this).attr('type');//coat1, shoes, shirt...
-                        self.pageCount = 0;//重新计算页数
-                        self.getData(self.type, 0, function (data) {
+                        self.pageCount = 1;//重新计算页数
+                        self.getData(self.type, self.pageCount, function (data) {
                             self.loadend('mask');
 
                             if (data.state) {
@@ -724,8 +726,8 @@
                     } else {
                         if ($(this).hasClass('prev')) {
                             self.pageCount--;
-                            if (self.pageCount < 0) {
-                                self.pageCount = 0;
+                            if (self.pageCount < 1) {
+                                self.pageCount = 1;
                             }
                         }
                         if ($(this).hasClass('next')) {
@@ -740,6 +742,15 @@
                                 delete  data.message;
                                 data = self.formatData(data);
                                 self.renderList(data);
+                            } else {
+                                if ($(this).hasClass('prev')){
+                                    self.pageCount++;
+                                } else {
+                                    self.pageCount--;
+                                    if (self.pageCount < 1) {
+                                        self.pageCount = 1;
+                                    }
+                                }
                             }
                         });
                     }
@@ -878,8 +889,10 @@
                         return;
                     }
                     arr.forEach(function (item) {
-                        item.moudel = self.imgUrl + item.id + '_' + self.imgSize + '.png';
-                        item.thumb = self.imgUrl + item.id + '.png';
+//                        item.moudel = self.imgPath + item.id + '_' + self.imgSize + '.png';
+//                        item.thumb = self.imgPath + item.id + '.png';
+                        item.moudel = self.imgPath + item.id + '.png';
+                        item.thumb = self.imgPath + item.id + '.jpg';
                     });
                 });
                 return data;
@@ -983,7 +996,8 @@
 
 //                    去除同类型，同层级的
                     if (typeof  data == 'object') {
-                        if ((li_zindex === data.index && li_type === data.type && id != data.id)
+
+                        if ((li_zindex === data.index || li_type === data.type) && id != data.id
                         //|| (typeof data.index === 'undefined' && li_type === data.type)
                             ) {
 //                            var id = $('img', li).attr('id');
